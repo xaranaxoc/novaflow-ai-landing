@@ -137,6 +137,10 @@ h3{ font-size:clamp(1.15rem, 1.6vw, 1.35rem); letter-spacing:-0.01em; }
 
 /* ---------- layout ---------- */
 .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding-inline:var(--pad); }
+/* Grid children default to min-width:auto, so a long word (e.g. «интеллектуальный»)
+   forces the column wider than the viewport → horizontal overflow. Reset to 0 so
+   columns can shrink; overflow-wrap:break-word on headings then wraps the word. */
+.hero-grid>*,.features-grid>*,.steps>*,.integrations-layout>*,.cases-grid>*,.plans>*,.cta-band>*,.foot-grid>*{ min-width:0; }
 section{ position:relative; padding-block: clamp(72px, 9vw, 120px); }
 .section-head{ max-width:760px; margin-bottom:clamp(36px,5vw,60px); }
 .section-head .lead{ margin-top:18px; }
