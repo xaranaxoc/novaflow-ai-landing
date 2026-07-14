@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>NovaFlow AI — Внедряем искусственный интеллект в бизнес-процессы</title>
 <meta name="description" content="NovaFlow AI — платформа автоматизации бизнеса: AI-чатботы, автоматизация CRM, AI-аналитика, документооборот и голосовые ассистенты в одном окне." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -46,6 +46,8 @@ body{
   line-height: 1.6;
   letter-spacing: 0.005em;
   overflow-x:hidden;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering:optimizeLegibility;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }
@@ -86,7 +88,7 @@ svg{ display:block; }
 .eyebrow::before{
   content:""; width:26px; height:1px; background: var(--accent-2); opacity:.7;
 }
-h1,h2,h3{ font-family:var(--font-display); font-weight:600; letter-spacing:-0.02em; line-height:1.12; }
+h1,h2,h3{ font-family:var(--font-display); font-weight:600; letter-spacing:-0.02em; line-height:1.12; overflow-wrap:break-word; }
 h1{ font-size:clamp(2.4rem, 6vw, 4.4rem); }
 h2{ font-size:clamp(1.9rem, 3.6vw, 2.9rem); line-height:1.14; }
 h3{ font-size:clamp(1.15rem, 1.6vw, 1.35rem); letter-spacing:-0.01em; }
@@ -181,6 +183,17 @@ section{ position:relative; padding-block: clamp(72px, 9vw, 120px); }
    HERO
    ===================================================================== */
 .hero{ padding-top: clamp(150px, 18vh, 210px); padding-bottom: clamp(70px, 8vw, 110px); }
+/* ambient hero backdrop — picks up hero-bg.png if present, falls back to global glow */
+.hero::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background:url("hero-bg.png") no-repeat right center / cover;
+  opacity:.30; mix-blend-mode:screen;
+  -webkit-mask-image:linear-gradient(90deg, transparent 0%, #000 55%);
+          mask-image:linear-gradient(90deg, transparent 0%, #000 55%);
+}
+.hero > .wrap{ position:relative; z-index:1; }
+/* keep anchored sections clear of the fixed nav */
+main section[id]{ scroll-margin-top:96px; }
 .hero-grid{ display:grid; grid-template-columns: 1.15fr .85fr; gap: clamp(36px,5vw,72px); align-items:center; }
 .hero h1{ margin-top:24px; }
 .hero h1 .grad-text{ display:inline; }
@@ -197,7 +210,7 @@ section{ position:relative; padding-block: clamp(72px, 9vw, 120px); }
 .orbit{ position:absolute; inset:0; border:1px solid var(--border); border-radius:50%; }
 .orbit.o2{ inset:14%; border-color:var(--border-2); }
 .orbit.o3{ inset:28%; border-color: rgba(255,255,255,0.10); }
-.orbit .node{ position:absolute; width:14px; height:14px; border-radius:50%; top:50%; left:50%; }
+.orbit .node{ position:absolute; width:14px; height:14px; border-radius:50%; top:0; left:50%; transform:translate(-50%,-50%); }
 @keyframes spin{ to{ transform:rotate(360deg); } }
 @keyframes spinR{ to{ transform:rotate(-360deg); } }
 .spin{ animation:spin 26s linear infinite; }
@@ -272,6 +285,15 @@ section{ position:relative; padding-block: clamp(72px, 9vw, 120px); }
 .case .out{ display:flex; align-items:flex-start; gap:12px; }
 .case .out svg{ width:18px; height:18px; color:var(--success); flex:0 0 auto; margin-top:3px; }
 .case .out span{ font-size:14px; color:var(--muted); }
+/* media band atop each case — image layer over a brand gradient fallback */
+.case-media{
+  height:150px; position:relative; border-bottom:1px solid var(--border);
+  background-size:cover, cover; background-position:center, center; background-repeat:no-repeat, no-repeat;
+}
+.case-media::after{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(180deg, transparent 45%, oklch(15% 0.026 275 / .65));
+}
 
 /* =====================================================================
    PRICING
@@ -377,27 +399,53 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
   .nav-cta .btn-ghost{ display:none; }
   .burger{ display:grid; }
   .hero-grid{ grid-template-columns:1fr; }
-  .hero-visual{ max-width:340px; margin:8px auto 0; order:2; }
+  .hero-visual{ max-width:min(340px, 86vw); margin:10px auto 0; order:2; }
   .steps{ grid-template-columns:repeat(2,1fr); }
   .step::after{ display:none; }
   .cases-grid{ grid-template-columns:1fr; }
+  .case-media{ height:140px; }
+  .form-card{ padding:26px; }
   .plans{ grid-template-columns:1fr; max-width:480px; margin-inline:auto; }
   .cta-band{ grid-template-columns:1fr; }
   .foot-grid{ grid-template-columns:1fr 1fr; }
   .foot-brand{ grid-column:1 / -1; }
+  .drawer a{ min-height:52px; padding:6px 28px; display:inline-flex; align-items:center; }
 }
 @media (max-width:640px){
   body{ font-size:16px; }
+  section{ padding-block:56px; }
+  .section-head{ margin-bottom:34px; }
   .features-grid{ grid-template-columns:1fr; }
+  .feat,.step{ padding:26px 22px; }
   .feat.wide,.feat.narrow{ grid-column:span 1; }
   .steps{ grid-template-columns:1fr; }
   .foot-grid{ grid-template-columns:1fr; }
   .foot-brand{ grid-column:auto; }
+  .hero-copy{ text-align:center; }
+  .hero-cta{ justify-content:center; }
+  .trust{ justify-content:center; }
   .hero-cta .btn{ width:100%; }
   .nav-cta .btn-primary{ display:none; }
+  .case .case-top{ padding:24px 22px 8px; }
+  .case .case-body{ padding:10px 22px 24px; }
+  footer{ padding-block:48px 30px; }
+}
+@media (max-width:480px){
+  .hero-visual{ max-width:min(250px, 82vw); }
+  .case-media{ height:118px; }
+  .form-card{ padding:22px; }
+  .cta-band{ padding:22px; }
+  .plan{ padding:26px 22px; }
+  .billing button{ padding:8px 15px; font-size:13px; }
+  .drawer a{ font-size:22px; }
+  .foot-bottom{ flex-direction:column; align-items:flex-start; }
+  footer{ padding-bottom: calc(30px + env(safe-area-inset-bottom)); }
+  .socials a{ width:44px; height:44px; }
 }
 @media (max-width:380px){
   :root{ --pad:18px; }
+  .hero{ padding-top:clamp(132px,16vh,180px); }
+  .case-media{ height:104px; }
 }
 @media (prefers-reduced-motion:reduce){
   *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
@@ -493,9 +541,9 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
 
       <div class="hero-visual reveal">
         <div class="glow"></div>
-        <div class="orbit o1 spin"><span class="node" style="background:var(--accent-2); transform:translate(-50%,-50%) translate(230px,0);"></span></div>
-        <div class="orbit o2 spinR"><span class="node" style="background:var(--accent); transform:translate(-50%,-50%) translate(-160px,0);"></span></div>
-        <div class="orbit o3 spin"><span class="node" style="background:var(--accent-2); transform:translate(-50%,-50%) translate(110px,0);"></span></div>
+        <div class="orbit o1 spin"><span class="node" style="background:var(--accent-2)"></span></div>
+        <div class="orbit o2 spinR"><span class="node" style="background:var(--accent)"></span></div>
+        <div class="orbit o3 spin"><span class="node" style="background:var(--accent-2)"></span></div>
         <svg class="core" viewBox="0 0 200 200" fill="none" aria-hidden="true">
           <defs>
             <linearGradient id="hg" x1="0" y1="0" x2="200" y2="200" gradientUnits="userSpaceOnUse">
@@ -630,7 +678,7 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
       <div class="int-chips reveal" data-od-id="integration-chips">
         <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>amoCRM</span>
         <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg>Битрикс24</span>
-        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-5.2-8.1L12 12l4.5 4.5"/></svg>Telegram</span>
+        <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>Telegram</span>
         <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.7-4.6A8 8 0 1112 20H3z"/></svg>WhatsApp</span>
         <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>1С</span>
         <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 010 18"/></svg>Я.Метрика</span>
@@ -652,6 +700,7 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
     </div>
     <div class="cases-grid">
       <article class="glass case reveal" data-od-id="case-card-ecom">
+        <div class="case-media" style="background-image:url('case-ecom.png'), linear-gradient(135deg, oklch(36% 0.13 295), oklch(30% 0.11 210));" aria-hidden="true"></div>
         <div class="case-top">
           <span class="tag">E-commerce</span>
           <h3>Поддержка интернет-магазина</h3>
@@ -666,6 +715,7 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
       </article>
 
       <article class="glass case reveal" data-od-id="case-card-finance">
+        <div class="case-media" style="background-image:url('case-finance.png'), linear-gradient(135deg, oklch(34% 0.11 210), oklch(30% 0.09 190));" aria-hidden="true"></div>
         <div class="case-top">
           <span class="tag">Финансы</span>
           <h3>Обработка заявок и документов</h3>
@@ -680,6 +730,7 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
       </article>
 
       <article class="glass case reveal" data-od-id="case-card-sales">
+        <div class="case-media" style="background-image:url('case-sales.png'), linear-gradient(135deg, oklch(36% 0.14 305), oklch(32% 0.12 330));" aria-hidden="true"></div>
         <div class="case-top">
           <span class="tag">Отдел продаж</span>
           <h3>Квалификация и маршрутизация лидов</h3>
@@ -896,7 +947,7 @@ footer{ border-top:1px solid var(--border); padding-block: clamp(50px,6vw,72px) 
     <div class="foot-bottom">
       <p>© 2025 NovaFlow AI. Все права защищены.</p>
       <div class="socials">
-        <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5L3 12l5 2 2 5 3-4 5 4z"/><path d="M8 14l8-6"/></svg></a>
+        <a href="#" aria-label="Telegram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg></a>
         <a href="#" aria-label="VK"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8c0 5 3 9 8 9h2M4 8h4v8M20 8c0 4-3 8-6 8"/></svg></a>
         <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 10v7M7 7v.01M12 17v-4a2 2 0 014 0v4M12 17v-7"/></svg></a>
       </div>
